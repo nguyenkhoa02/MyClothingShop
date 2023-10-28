@@ -9,6 +9,6 @@ router.route("/")
 
 router.route("/:id")
     .delete(category.delete)
-    .put(category.update)
+    .patch(category.update)
 
 module.exports = router;

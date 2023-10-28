@@ -11,7 +11,7 @@ router.route("/addItem")
 
 router.route("/:id")
     .get(items.findOne)
-    .put(items.update)
+    .patch(items.update)
     .delete(items.delete)
 
 

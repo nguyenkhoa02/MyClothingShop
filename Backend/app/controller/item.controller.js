@@ -90,23 +90,53 @@ exports.findOne = async (req, res, next) => {
 exports.findItemCategory = async (req, res, next) => {
     try {
         const itemService = new ItemService(MongoDB.client);
+        const document = await itemService.find({});
+        return res.send(document)
         //TODO: viet lenh lay ra danh sach san pham voi category da cho req.params.category
     }
     catch (e) {
         return next(
-            new ApiError(400, `Error occurred while Item is retrieving by category`)
+            new ApiError(500, `Error occurred while Item is retrieving by category`)
         )
     }
 }
 
 exports.update = async (req, res, next) => {
+    if (!Object.keys(req.body).length === 0){
+        return next(new ApiError(400, "Data to update can not be empty"));
+    }
 
+    try {
+        const itemService = new ItemService(MongoDB.client);
+        const document = await itemService.update(req.params.id, req.body);
+        //FixMe: Xu ly khi nguoi dung doi anh san pahm sang anh khac, doi thong tin category
+        if (!document) {
+            return next(new ApiError(404, "Item not found"));
+        }
+        return res.send({message: "Item was update successfully"});
+
+    }
+    catch (e) {
+        return next(
+            new ApiError(500, `Error occurred while updated Item with id=${req.params.id}`)
+        )
+    }
 }
 
 exports.delete = async (req, res, next) => {
-
+    try{
+        const itemService = new ItemService(MongoDB.client);
+        const document = await itemService.delete(req.params.id);
+        if (!document) {
+            return next(new ApiError(404, "Item not found"));
+        }
+        return res.send({message : "Item was deleted successfully"});
+    }
+    catch (error) {
+        return next(new ApiError(500, `Could not delete item with id=${req.params.id}`));
+    }
 }
 
-exports.deleteAll = async (req, res, next) => {
-
-}
+// exports.deleteAll = async (req, res, next) => {
+//
+// }

@@ -70,7 +70,7 @@ exports.delete = async (req, res, next) => {
         const categoryService = new CategoryService(MongoDB.client);
         const document = await categoryService.delete(req.params.id);
         if (!document) {
-            return next(new ApiError(404, "Contact not found"));
+            return next(new ApiError(404, "Category not found"));
         }
         return res.send({message : "Category was deleted successfully"});
     }
