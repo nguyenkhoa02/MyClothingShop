@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', () =>{
         this.user = user;
     }
 
-    function logout(user) {
+    function logout() {
         this.token = null
         this.user = null
     }

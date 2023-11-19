@@ -1,5 +1,6 @@
 <script setup>
 
+import Logout from "@/components/Logout.vue";
 </script>
 
 <template>
@@ -37,6 +38,9 @@
                         >
               Cart
             </RouterLink>
+          </li>
+          <li class="nav-item">
+            <Logout></Logout>
           </li>
         </ul>
       </div>

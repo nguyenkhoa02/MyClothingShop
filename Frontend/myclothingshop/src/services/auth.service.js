@@ -25,6 +25,19 @@ class AuthService {
         }
         return false;
     }
+
+    async logout() {
+        try {
+            let res = await this.api.get('/logout');
+            if (res) {
+                return true;
+            }
+        }
+        catch (e) {
+            console.log(e);
+        }
+        return false;
+    }
 }
 
 export default new AuthService();
