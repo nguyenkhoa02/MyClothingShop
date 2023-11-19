@@ -7,8 +7,13 @@ class UserService {
 
     extractUserData(payload) {
         const user = {
-            username: payload.username,
-            password: payload.password
+            phone: payload.phone,
+            password: payload.password,
+            email: payload.email,
+            fullName: payload.fullName,
+            address: payload.address,
+            roles: payload.roles,
+            refreshToken: payload.refreshToken
         }
 
         Object.keys(user).forEach(
@@ -22,6 +27,9 @@ class UserService {
         const result = await this.User.findOneAndUpdate(
             user,
             {
+                $set: {roles: 'user'}
+            },
+            {
                 returnDocument: "after", upsert: true
             }
         )
@@ -33,9 +41,13 @@ class UserService {
         return await cursor.toArray();
     }
 
-    async findByName(name){
-        return await this.find({
-            name: {$regex : new RegExp(name), $options: "i"}
+    async findOne(filter) {
+        return await this.User.findOne(filter);
+    }
+
+    async findByPhoneNumber(phone){
+        return await this.findOne({
+            phone: {$regex : new RegExp(phone), $options: "i"}
         });
     }
 

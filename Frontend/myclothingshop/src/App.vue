@@ -1,14 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import AppHeader from "@/components/AppHeader.vue";
 </script>
 
 <template>
-<!--  <router-link to="/authentication/SignIn">SignIn</router-link>-->
-<!--  <router-link to="/authentication/SignUp">SignUp</router-link>-->
-  <header>
-    <router-view></router-view>
-  </header>
+  <div class="app">
+    <AppHeader class="container-fluid"></AppHeader>
+    <div class="container">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <style scoped>

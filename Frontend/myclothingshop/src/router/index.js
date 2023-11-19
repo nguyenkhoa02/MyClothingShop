@@ -1,45 +1,82 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import Login from "@/views/AuthenticationView.vue";
-import AboutView from "@/views/AboutView.vue";
-import AuthenticationView from "@/views/AuthenticationView.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from "@/stores/auth.store";
+import AuthService from '@/services/auth.service';
 
+const routes = [
+    {
+        path: '/',
+        name: 'home',
+        component: () => import('@/views/HomeView.vue'),
+        meta: {
+            requiresAuth: true,
+        },
+    },
+    {
+        path: '/about',
+        name: 'about',
+        component: () => import('@/views/AboutView.vue'),
+        meta: {
+            requiresAuth: true,
+        },
+    },
+    {
+        path: '/authentication',
+        name: 'Authentication',
+        component: () => import('@/views/AuthenticationView.vue'),
+        props: true,
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "notfound",
+        component: () => import("@/views/NotFound.vue"),
+    },
+    {
+        path: "/product/:id",
+        name: "DetailItem",
+        component: () => import("@/views/DetailItemView.vue"),
+        props: true,
+        meta: {
+            requiresAuth: true,
+        },
+    },
+    {
+        path: "/cart",
+        name: "Cart",
+        component: () => import("@/views/CartView.vue"),
+        meta: {
+            requiresAuth: true,
+        },
+    },
+];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
-    {
-      path: '/authentication',
-      name: 'Authentication',
-      component: AuthenticationView,
+    history: createWebHistory(),
+    routes: routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+    try {
+        const checkAuth = await AuthService.checkAuth();
+        const authStore = useAuthStore();
+        if (to.meta.requiresAuth && !checkAuth) {
+            console.log('Authentication failed. Redirecting to /authentication');
+            return next('/authentication');
+        }
+
+        if (to.name === 'Authentication' && checkAuth) {
+            console.log('Already authenticated. Redirecting to /');
+            return next('/');
+        }
+
+        if (checkAuth) {
+            authStore.login(checkAuth.data.token, checkAuth.data.user);
+        }
+
+        return next();
+    } catch (e) {
+        console.error('Error checking authentication:', e);
+        return next({ name: 'Authentication' });
     }
-  ]
-})
+});
 
-router.beforeEach((to, from, next) => {
-  // const publicPages = ['', '/authentication/Login', '/authentication/SignUp'];
-  const publicPages = ['/authentication'];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('user');
-
-  if (authRequired && !loggedIn) {
-    return next('/authentication');
-  }
-
-  next();
-})
-
-export default router
+export default router;

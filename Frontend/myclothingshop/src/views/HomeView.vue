@@ -2,12 +2,15 @@
 import TheWelcome from '../components/TheWelcome.vue'
 import LoginForm from "@/components/LoginForm.vue";
 import {RouterLink} from "vue-router";
+import Banner from "@/components/Banner.vue";
+import Item from "@/components/Item.vue";
+import DetailItemView from "@/views/DetailItemView.vue";
 </script>
 
 <template>
   <main>
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/about">About</RouterLink>
-    <RouterLink to="/authentication">Authentications</RouterLink>
+    <Banner></Banner>
+    <Item></Item>
+
   </main>
 </template>

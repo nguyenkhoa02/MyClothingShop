@@ -9,7 +9,7 @@ class UserDetailService {
         const user = {
             address: payload.address,
             email: payload.email,
-            phone: payload.phone
+            fullName: payload.fullName
         }
 
         Object.keys(user).forEach(

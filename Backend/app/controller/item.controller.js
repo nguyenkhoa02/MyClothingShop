@@ -54,7 +54,7 @@ exports.findAll = async (req, res, next ) => {
     let docs = [];
 
     try {
-        const itemService = ItemService(MongoDB.client);
+        const itemService = new ItemService(MongoDB.client);
         const { name } = req.query;
         if (name) {
             docs = await itemService.findByName(name);

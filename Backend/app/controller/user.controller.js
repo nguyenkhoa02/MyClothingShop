@@ -6,36 +6,38 @@ exports.validate = async (req, res, next) => {
     //TODO: Xacs thucwj ddang nhap
 }
 
-exports.create = async (req,res,next) => {
-    const {username, password} = req.body
-    if(!username || !password){
-        return next(new ApiError(400,"Name or password can not be empty"));
-    }
-
-    try{
-        const userService = new UserService(MongoDB.client);
-        const doc = userService.findByName(username);
-        if (!doc){
-            const document = await userService.create(req.body);
-            return res.send(document);
-        }
-        return res.send({message: "Username is already registered!"})
-    }
-    catch (error){
-        return next(new ApiError(500,"An error occurred while creating User!"))
-    }
-}
+// exports.create = async (req,res,next) => {
+//     const {username, password} = req.body
+//     if(!username || !password){
+//         return next(new ApiError(400,"Name or password can not be empty"));
+//     }
+//
+//     try{
+//         const userService = new UserService(MongoDB.client);
+//         const doc = userService.findByName(username);
+//         if (!doc){
+//             const document = await userService.create(req.body);
+//             return res.send(document);
+//         }
+//         return res.send({message: "Username is already registered!"})
+//     }
+//     catch (error){
+//         return next(new ApiError(500,"An error occurred while creating User!"))
+//     }
+// }
 
 /*
 findAll -> get All List category
  */
+
+//FIXME: ??? findAll for???
 exports.findAll = async (req,res,next)=>{
     let docs=[];
     try{
         const userService = new UserService(MongoDB.client);
-        const {name} = req.query;
-        if(name){
-            docs = await userService.findByName(name);
+        const {phone} = req.query;
+        if(phone){
+            docs = await userService.findByPhoneNumber(phone);
         }
         else {
             docs = await userService.find({});
